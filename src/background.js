@@ -1,42 +1,29 @@
 /**
- * background.js : Service Worker (Manifest V3)
+ * background.js : Scrooly v1.0.3
  *
- * Responsabilités :
- * - Relayer les messages entre le popup et les content scripts
- * - Gérer l'état global (enabled/disabled) via chrome.storage
+ * Initializes default state on first install.
+ * No master toggle ; only per-platform states.
  */
 
-// Initialiser l'état par défaut au premier install
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ enabled: true }, () => {
-    console.log("[AutoScroll] Extension installée, activée par défaut.");
+  chrome.storage.sync.get(["scrollCount"], (result) => {
+    const defaults = {
+      platforms: {
+        youtube: true,
+        tiktok: true,
+        instagram: true,
+        snapchat: true,
+        twitter: true,
+      },
+    };
+
+    // Preserve existing scrollCount across updates
+    if (result.scrollCount === undefined) {
+      defaults.scrollCount = 0;
+    }
+
+    chrome.storage.sync.set(defaults, () => {
+      console.log("[Scrooly] Installed, all platforms enabled.");
+    });
   });
-});
-
-// Écouter les messages du popup pour relayer aux content scripts
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "TOGGLE_STATE") {
-    chrome.storage.sync.set({ enabled: message.enabled }, () => {
-      // Relayer le changement à tous les onglets actifs
-      chrome.tabs.query({}, (tabs) => {
-        for (const tab of tabs) {
-          chrome.tabs.sendMessage(tab.id, {
-            type: "STATE_CHANGED",
-            enabled: message.enabled,
-          }).catch(() => {
-            // Onglet sans content script injecté ; on ignore silencieusement
-          });
-        }
-      });
-      sendResponse({ success: true });
-    });
-    return true; // Indique une réponse asynchrone
-  }
-
-  if (message.type === "GET_STATE") {
-    chrome.storage.sync.get(["enabled"], (result) => {
-      sendResponse({ enabled: result.enabled !== false });
-    });
-    return true;
-  }
 });

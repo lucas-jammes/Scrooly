@@ -1,15 +1,16 @@
 /**
- * popup.js : Logique du popup
+ * popup.js : Scrooly v1.0.3
  *
- * - Gère le toggle ON/OFF
- * - Met en surbrillance la plateforme de l'onglet actif
+ * Per-platform toggles only (no master toggle).
+ * Pulse indicator on active platform.
+ * Scroll counter from storage.
+ * Dims non-active platforms when on a supported site.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const toggleSwitch = document.getElementById("toggleSwitch");
-  const statusText = document.getElementById("statusText");
+  const platformToggles = document.querySelectorAll(".platform-toggle");
+  const scrollCountEl = document.getElementById("scrollCount");
 
-  // Mapping hostname -> clé de plateforme
   const platformMap = {
     "www.youtube.com": "youtube",
     "www.tiktok.com": "tiktok",
@@ -19,49 +20,115 @@ document.addEventListener("DOMContentLoaded", () => {
     "twitter.com": "twitter",
   };
 
-  // Récupérer l'état initial
-  chrome.runtime.sendMessage({ type: "GET_STATE" }, (response) => {
-    if (chrome.runtime.lastError) return;
+  const defaultPlatforms = {
+    youtube: true,
+    tiktok: true,
+    instagram: true,
+    snapchat: true,
+    twitter: true,
+  };
 
-    const enabled = response?.enabled !== false;
-    toggleSwitch.checked = enabled;
-    updateStatusText(enabled);
+  let currentPlatform = null;
+
+  // ---- Load state ----
+
+  chrome.storage.sync.get(["platforms", "scrollCount"], (result) => {
+    const platforms = { ...defaultPlatforms, ...(result.platforms || {}) };
+
+    platformToggles.forEach((toggle) => {
+      const key = toggle.dataset.key;
+      toggle.checked = platforms[key] !== false;
+      updateRowUI(toggle);
+    });
+
+    scrollCountEl.textContent = result.scrollCount || 0;
   });
 
-  // Mettre en surbrillance la plateforme de l'onglet actif
+  // ---- Detect current tab platform ----
+
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (!tabs[0]?.url) return;
 
     try {
       const url = new URL(tabs[0].url);
-      const platform = platformMap[url.hostname];
-
-      if (platform) {
-        const chip = document.querySelector(`.platform-chip[data-platform="${platform}"]`);
-        if (chip) chip.classList.add("active");
-      }
+      currentPlatform = platformMap[url.hostname] || null;
     } catch {
-      // URL invalide ; on ignore
+      currentPlatform = null;
     }
-  });
 
-  // Gérer le toggle
-  toggleSwitch.addEventListener("change", () => {
-    const enabled = toggleSwitch.checked;
-    updateStatusText(enabled);
-
-    chrome.runtime.sendMessage({
-      type: "TOGGLE_STATE",
-      enabled: enabled,
-    });
+    applyActiveState();
   });
 
   /**
-   * Met à jour le texte de statut.
-   * @param {boolean} enabled
+   * Highlight the current platform, dim the others, show pulse.
+   * If user is not on any supported platform, nothing is dimmed.
    */
-  function updateStatusText(enabled) {
-    statusText.textContent = enabled ? "Activé" : "Désactivé";
-    statusText.classList.toggle("disabled", !enabled);
+  function applyActiveState() {
+    const rows = document.querySelectorAll(".platform-row");
+
+    rows.forEach((row) => {
+      const platform = row.dataset.platform;
+      const pulse = row.querySelector(".platform-pulse");
+      const isActive = platform === currentPlatform;
+      const toggle = row.querySelector(".platform-toggle");
+
+      row.classList.toggle("active", isActive);
+
+      // Only dim if we ARE on a supported platform
+      if (currentPlatform) {
+        row.classList.toggle("dimmed", !isActive);
+      } else {
+        row.classList.remove("dimmed");
+      }
+
+      // Pulse : visible only on active platform with toggle ON
+      if (isActive && toggle.checked) {
+        pulse.classList.add("watching");
+      } else {
+        pulse.classList.remove("watching");
+      }
+    });
+  }
+
+  // ---- Platform toggles ----
+
+  platformToggles.forEach((toggle) => {
+    toggle.addEventListener("change", () => {
+      updateRowUI(toggle);
+      applyActiveState();
+      savePlatforms();
+      broadcastState();
+    });
+  });
+
+  function updateRowUI(toggle) {
+    const row = toggle.closest(".platform-row");
+    row.classList.toggle("disabled", !toggle.checked);
+  }
+
+  function savePlatforms() {
+    const platforms = {};
+    platformToggles.forEach((toggle) => {
+      platforms[toggle.dataset.key] = toggle.checked;
+    });
+    chrome.storage.sync.set({ platforms });
+  }
+
+  // ---- Broadcast to content scripts ----
+
+  function broadcastState() {
+    const platforms = {};
+    platformToggles.forEach((toggle) => {
+      platforms[toggle.dataset.key] = toggle.checked;
+    });
+
+    chrome.tabs.query({}, (tabs) => {
+      for (const tab of tabs) {
+        chrome.tabs.sendMessage(tab.id, {
+          type: "STATE_CHANGED",
+          platforms,
+        }).catch(() => {});
+      }
+    });
   }
 });

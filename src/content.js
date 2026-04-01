@@ -1,98 +1,79 @@
 /**
- * content.js : Routeur principal
+ * content.js : Scrooly v1.0.3
  *
- * Détecte la plateforme courante, charge la stratégie appropriée,
- * et orchestre la surveillance de la vidéo active.
+ * No master toggle. Each platform has its own enabled/disabled state.
+ * Increments scrollCount in chrome.storage on each auto-scroll.
  */
 
 (() => {
   "use strict";
 
-  // Registre des stratégies par plateforme (chaque fichier platforms/*.js s'enregistre ici)
-  // window.__autoScrollPlatforms est peuplé par les fichiers chargés avant content.js
   const platforms = window.__autoScrollPlatforms || {};
-
   const hostname = window.location.hostname;
 
-  /**
-   * Identifie la plateforme active en fonction du hostname et du path.
-   * @returns {object|null} La stratégie plateforme ou null si non supportée.
-   */
-  function detectPlatform() {
+  function detectPlatformKey() {
     const path = window.location.pathname;
 
-    if (hostname.includes("youtube.com") && path.includes("/shorts")) {
-      return platforms.youtube || null;
-    }
-    if (hostname.includes("tiktok.com")) {
-      return platforms.tiktok || null;
-    }
-    if (hostname.includes("instagram.com") && path.includes("/reels")) {
-      return platforms.instagram || null;
-    }
-    if (hostname.includes("snapchat.com") && path.includes("/spotlight")) {
-      return platforms.snapchat || null;
-    }
-    if (hostname.includes("x.com") || hostname.includes("twitter.com")) {
-      return platforms.twitter || null;
-    }
+    if (hostname.includes("youtube.com") && path.includes("/shorts")) return "youtube";
+    if (hostname.includes("tiktok.com")) return "tiktok";
+    if (hostname.includes("instagram.com") && path.includes("/reels")) return "instagram";
+    if (hostname.includes("snapchat.com") && path.includes("/spotlight")) return "snapchat";
+    if (hostname.includes("x.com") || hostname.includes("twitter.com")) return "twitter";
 
     return null;
   }
 
-  // État interne
-  let isEnabled = true;
+  let platformStates = {
+    youtube: true,
+    tiktok: true,
+    instagram: true,
+    snapchat: true,
+    twitter: true,
+  };
+  let activePlatformKey = null;
   let activePlatform = null;
-  let observer = null;
   let watchInterval = null;
+  let observer = null;
 
-  /**
-   * Surveille la vidéo active et déclenche le scroll à la fin.
-   */
+  function isActive() {
+    return activePlatformKey && platformStates[activePlatformKey] !== false;
+  }
+
   function startWatching() {
     stopWatching();
+    if (!activePlatform || !isActive()) return;
 
-    if (!activePlatform) return;
-
-    // Intervalle de vérification : cherche la vidéo active et attache les listeners
     watchInterval = setInterval(() => {
-      if (!isEnabled) return;
+      if (!isActive()) return;
 
       const video = activePlatform.getActiveVideo();
-      if (!video || video.__autoScrollBound) return;
+      if (!video || video.__scroolyBound) return;
 
-      video.__autoScrollBound = true;
+      video.__scroolyBound = true;
 
       if (activePlatform.usesLoop) {
-        // Pour les plateformes qui bouclent (Insta, TikTok, Snap) :
-        // on détecte la fin quand currentTime revient proche de 0 après avoir dépassé 90%
         let hasReachedEnd = false;
 
         const onTimeUpdate = () => {
-          if (!isEnabled) return;
-
+          if (!isActive()) return;
           const progress = video.currentTime / video.duration;
 
-          if (progress >= 0.95) {
-            hasReachedEnd = true;
-          }
+          if (progress >= 0.95) hasReachedEnd = true;
 
           if (hasReachedEnd && progress < 0.1) {
-            // La vidéo a bouclé : on passe à la suivante
             hasReachedEnd = false;
             video.removeEventListener("timeupdate", onTimeUpdate);
-            video.__autoScrollBound = false;
+            video.__scroolyBound = false;
             triggerNext();
           }
         };
 
         video.addEventListener("timeupdate", onTimeUpdate);
       } else {
-        // Pour les plateformes sans boucle (YouTube Shorts) : événement "ended"
         const onEnded = () => {
-          if (!isEnabled) return;
+          if (!isActive()) return;
           video.removeEventListener("ended", onEnded);
-          video.__autoScrollBound = false;
+          video.__scroolyBound = false;
           triggerNext();
         };
 
@@ -101,22 +82,27 @@
     }, 1000);
   }
 
-  /**
-   * Déclenche le passage à la vidéo suivante.
-   */
   function triggerNext() {
     if (!activePlatform) return;
 
-    console.log(`[AutoScroll] Fin de vidéo détectée sur ${activePlatform.name}, passage à la suivante.`);
+    console.log(`[Scrooly] Video ended on ${activePlatform.name}, scrolling to next.`);
     activePlatform.scrollToNext();
+    incrementCounter();
 
-    // Relancer la surveillance après un court délai (le DOM doit se mettre à jour)
     setTimeout(() => startWatching(), 1500);
   }
 
   /**
-   * Arrête la surveillance.
+   * Increment the scroll counter in storage.
+   * Lightweight : one read + one write per scroll event.
    */
+  function incrementCounter() {
+    chrome.storage.sync.get(["scrollCount"], (result) => {
+      const count = (result.scrollCount || 0) + 1;
+      chrome.storage.sync.set({ scrollCount: count });
+    });
+  }
+
   function stopWatching() {
     if (watchInterval) {
       clearInterval(watchInterval);
@@ -124,31 +110,35 @@
     }
   }
 
-  /**
-   * Initialise l'extension sur la page courante.
-   */
+  function updatePlatform() {
+    activePlatformKey = detectPlatformKey();
+    activePlatform = activePlatformKey ? (platforms[activePlatformKey] || null) : null;
+  }
+
   function init() {
-    activePlatform = detectPlatform();
+    updatePlatform();
 
     if (!activePlatform) {
-      console.log("[AutoScroll] Plateforme non supportée ou page non pertinente.");
+      console.log("[Scrooly] Unsupported platform or irrelevant page.");
       return;
     }
 
-    console.log(`[AutoScroll] Plateforme détectée : ${activePlatform.name}`);
+    console.log(`[Scrooly] Platform detected: ${activePlatform.name}`);
 
-    // Récupérer l'état initial
-    chrome.runtime.sendMessage({ type: "GET_STATE" }, (response) => {
+    // Load platform states
+    chrome.storage.sync.get(["platforms"], (result) => {
       if (chrome.runtime.lastError) return;
-      isEnabled = response?.enabled !== false;
-      if (isEnabled) startWatching();
+      platformStates = { ...platformStates, ...(result.platforms || {}) };
+      if (isActive()) startWatching();
     });
 
-    // Écouter les changements d'état depuis le popup
+    // Listen for toggle changes from popup
     chrome.runtime.onMessage.addListener((message) => {
       if (message.type === "STATE_CHANGED") {
-        isEnabled = message.enabled;
-        if (isEnabled) {
+        if (message.platforms) {
+          platformStates = { ...platformStates, ...message.platforms };
+        }
+        if (isActive()) {
           startWatching();
         } else {
           stopWatching();
@@ -156,13 +146,13 @@
       }
     });
 
-    // Observer les changements d'URL (SPA : YouTube, Instagram, etc.)
+    // SPA navigation
     let lastUrl = window.location.href;
     observer = new MutationObserver(() => {
       if (window.location.href !== lastUrl) {
         lastUrl = window.location.href;
-        activePlatform = detectPlatform();
-        if (activePlatform && isEnabled) {
+        updatePlatform();
+        if (isActive()) {
           startWatching();
         } else {
           stopWatching();
@@ -173,6 +163,5 @@
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
-  // Lancer l'initialisation
   init();
 })();

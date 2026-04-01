@@ -1,4 +1,6 @@
-/* popup.css : Design sombre, compact et moderne */
+/* =========================================================
+   Scrooly Popup v1.0.3
+   ========================================================= */
 
 * {
   margin: 0;
@@ -6,93 +8,89 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg-base: #12111A;
+  --bg-raised: #1B1A25;
+  --bg-hover: #222131;
+  --border: rgba(255, 255, 255, 0.06);
+  --text-primary: #F0EFF4;
+  --text-secondary: #9895A8;
+  --text-muted: #5E5B6E;
+  --accent: #7C5CFC;
+  --accent-dim: rgba(124, 92, 252, 0.15);
+  --radius-sm: 8px;
+
+  /* Platform colors */
+  --c-youtube: #FF0033;
+  --c-tiktok: #00F2EA;
+  --c-instagram: #E1306C;
+  --c-snapchat: #FFFC00;
+  --c-twitter: #FFFFFF;
+}
+
 body {
-  width: 300px;
-  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #1a1a2e;
-  color: #e0e0e0;
+  width: 260px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
 }
 
 .container {
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 }
 
-/* Header */
+/* ---- Header ---- */
+
 .header {
   display: flex;
   align-items: center;
-  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .logo {
   flex-shrink: 0;
+  filter: drop-shadow(0 2px 8px rgba(124, 92, 252, 0.3));
 }
 
-.title-group {
+.brand-text {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px;
 }
 
-.title {
-  font-size: 18px;
+.brand-name {
+  font-size: 17px;
   font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  letter-spacing: -0.4px;
 }
 
-.version {
-  font-size: 11px;
-  color: #6C5CE7;
-  font-weight: 500;
-  background: rgba(108, 92, 231, 0.15);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-/* Toggle section */
-.toggle-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 14px 16px;
-}
-
-.toggle-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.toggle-label {
-  font-size: 14px;
+.brand-version {
+  font-size: 10px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 1px 5px;
+  border-radius: 4px;
+  letter-spacing: 0.2px;
 }
 
-.toggle-status {
-  font-size: 12px;
-  color: #6C5CE7;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
+/* ---- Toggle switches (base) ---- */
 
-.toggle-status.disabled {
-  color: #666;
-}
-
-/* Toggle switch */
 .switch {
   position: relative;
   display: inline-block;
-  width: 44px;
-  height: 24px;
+  width: 34px;
+  height: 18px;
   flex-shrink: 0;
 }
 
@@ -106,94 +104,189 @@ body {
   position: absolute;
   cursor: pointer;
   inset: 0;
-  background: #333;
-  border-radius: 24px;
-  transition: background 0.3s ease;
+  background: #2E2D3A;
+  border-radius: 18px;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
 }
 
 .slider::before {
   content: "";
   position: absolute;
-  height: 18px;
-  width: 18px;
+  width: 12px;
+  height: 12px;
   left: 3px;
   bottom: 3px;
-  background: #fff;
+  background: #78778A;
   border-radius: 50%;
-  transition: transform 0.3s ease;
-}
-
-input:checked + .slider {
-  background: #6C5CE7;
+  transition: transform 0.25s ease, background 0.25s ease;
 }
 
 input:checked + .slider::before {
-  transform: translateX(20px);
+  transform: translateX(16px);
+  background: #fff;
 }
 
-/* Platforms */
-.platform-section {
+/* Per-platform toggle colors */
+.switch-youtube input:checked + .slider {
+  background: var(--c-youtube);
+  box-shadow: 0 0 10px rgba(255, 0, 51, 0.3);
+}
+
+.switch-tiktok input:checked + .slider {
+  background: var(--c-tiktok);
+  box-shadow: 0 0 10px rgba(0, 242, 234, 0.3);
+}
+.switch-tiktok input:checked + .slider::before {
+  background: #111;
+}
+
+.switch-instagram input:checked + .slider {
+  background: var(--c-instagram);
+  box-shadow: 0 0 10px rgba(225, 48, 108, 0.3);
+}
+
+.switch-snapchat input:checked + .slider {
+  background: var(--c-snapchat);
+  box-shadow: 0 0 10px rgba(255, 252, 0, 0.25);
+}
+.switch-snapchat input:checked + .slider::before {
+  background: #111;
+}
+
+.switch-twitter input:checked + .slider {
+  background: var(--c-twitter);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+.switch-twitter input:checked + .slider::before {
+  background: #111;
+}
+
+/* ---- Platforms section ---- */
+
+.platforms {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1px;
 }
 
-.section-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: #888;
-}
-
-.platform-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.platform-chip {
+.platform-row {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #ccc;
-  transition: border-color 0.2s ease;
+  justify-content: space-between;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: background 0.15s ease, opacity 0.25s ease;
 }
 
-.platform-chip.active {
-  border-color: #6C5CE7;
-  color: #fff;
-  background: rgba(108, 92, 231, 0.1);
+.platform-row:hover {
+  background: var(--bg-hover);
 }
 
-.chip-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
+/* Active platform (current tab) */
+.platform-row.active {
+  background: var(--bg-raised);
+  border-color: var(--border);
 }
 
-/* Info bar */
-.info-bar {
+/* Dimmed platforms (not the current tab) */
+.platform-row.dimmed {
+  opacity: 0.45;
+}
+
+.platform-row.dimmed:hover {
+  opacity: 0.7;
+}
+
+.platform-info {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
-  padding: 10px 12px;
-  background: rgba(108, 92, 231, 0.08);
-  border-radius: 8px;
-  font-size: 11px;
-  color: #999;
-  line-height: 1.4;
 }
 
-.info-bar svg {
+.platform-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.15s ease;
+}
+
+.platform-row.active .platform-name {
+  color: var(--text-primary);
+}
+
+/* Disabled row (toggle off) */
+.platform-row.disabled .platform-name {
+  color: var(--text-muted);
+}
+
+/* ---- Pulse indicator ---- */
+
+.platform-pulse {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: transparent;
   flex-shrink: 0;
-  margin-top: 1px;
-  color: #6C5CE7;
+  transition: background 0.3s ease;
+}
+
+/* Pulse visible only on active + enabled platform */
+.platform-row.active:not(.disabled) .platform-pulse.watching {
+  background: currentColor;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.platform-row[data-platform="youtube"] .platform-pulse { color: var(--c-youtube); }
+.platform-row[data-platform="tiktok"] .platform-pulse { color: var(--c-tiktok); }
+.platform-row[data-platform="instagram"] .platform-pulse { color: var(--c-instagram); }
+.platform-row[data-platform="snapchat"] .platform-pulse { color: var(--c-snapchat); }
+.platform-row[data-platform="twitter"] .platform-pulse { color: var(--c-twitter); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ---- Footer ---- */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px 0;
+}
+
+.footer-stats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.footer-stats svg {
+  color: var(--accent);
+}
+
+#scrollCount {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.github-link:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
 }
