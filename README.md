@@ -1,61 +1,109 @@
-# AutoScroll Videos
+<p align="center">
+  <a href="https://github.com/lucas-jammes/Scrooly">
+    <img src="assets/logo.png" alt="Scrooly Logo" width="75" height="75">
+  </a>
 
-Chrome extension that automatically scrolls to the next video when the current one ends.  
-Works on YouTube Shorts, TikTok, Instagram Reels, Snapchat Spotlight, and X.
+  <h1 align="center">Scrooly</h1>
 
-## Installation
+  <p align="center">
+    <img src="https://img.shields.io/github/license/lucas-jammes/Scrooly" title="GPL-3.0 License">
+    <img src="https://img.shields.io/github/stars/lucas-jammes/Scrooly" title="Stars">
+    <img src="https://img.shields.io/github/last-commit/lucas-jammes/Scrooly" title="Last commit">
+  </p>
 
-1. Download or clone this repo:
+  <p align="center">
+    Chrome extension that automatically scrolls to the next short video when the current one ends.
+  </p>
+</p>
 
-```bash
-git clone https://github.com/lucas-jammes/auto-scroll-extension.git
-```
+---
 
+## 📥 Installation
+
+No store listing required, install directly from source:
+
+1. Clone or download this repo
+   ```bash
+   git clone https://github.com/lucas-jammes/Scrooly.git
+   ```
 2. Open Chrome and go to `chrome://extensions/`
-3. Enable **Developer mode** (toggle in the top right corner)
-4. Click **Load unpacked**
-5. Select the `auto-scroll-extension` folder
+3. Enable **Developer mode** (top right toggle)
+4. Click **Load unpacked** and select the `Scrooly` folder
+5. Pin the extension from the puzzle icon in your toolbar
 
-The icon appears in the extensions bar. Click it to open the control popup.
+---
 
-## Usage
+## 🎯 Supported Platforms
 
-The extension works on its own once enabled. When a video ends, it scrolls to the next one. The popup lets you toggle the behavior on or off at any time, and highlights which supported platform you're currently on.
+| Platform | Behavior |
+|----------|----------|
+| **YouTube Shorts** | Detects end of video and scrolls to the next short |
+| **TikTok** | Detects end of first loop, then scrolls |
+| **Instagram Reels** | Detects end of first loop, then scrolls |
+| **Snapchat Spotlight** | Detects end of first loop, then scrolls |
+| **X (Twitter)** | Detects end of first loop, scrolls to next post |
 
-How it behaves depending on the platform:
+Each platform can be individually toggled on or off from the popup.
 
-- **YouTube Shorts**: detects the native end-of-video event and moves to the next short.
-- **TikTok / Instagram Reels / Snapchat Spotlight**: these platforms loop videos by default. The extension detects the end of the first playback cycle, then scrolls.
-- **X (Twitter)**: scrolls to the next post once the current video completes a full loop.
+---
 
-## Project structure
+## 🧩 How It Works
+
+- Click the Scrooly icon to open the popup
+- Each platform has its own colored toggle
+- The platform you're currently on is highlighted ; others are dimmed
+- A pulse indicator shows when Scrooly is actively watching a video
+- The footer tracks how many videos have been auto-scrolled
+
+No configuration needed. Open a supported site, watch a video, and Scrooly handles the rest.
+
+---
+
+## 📁 Project Structure
 
 ```
-auto-scroll-extension/
-├── manifest.json            Manifest V3
-├── background.js            Service worker (global state, messaging)
-├── content.js               Main router (platform detection, video monitoring)
-├── popup.html / .css / .js  User interface
-├── platforms/
-│   ├── youtube.js           YouTube Shorts strategy
-│   ├── tiktok.js            TikTok strategy
-│   ├── instagram.js         Instagram Reels strategy
-│   ├── snapchat.js          Snapchat Spotlight strategy
-│   └── twitter.js           X / Twitter strategy
-└── icons/
-    ├── icon16.png
-    ├── icon48.png
-    └── icon128.png
+Scrooly/
+├── manifest.json              Manifest V3
+├── LICENSE
+├── README.md
+├── assets/
+│   └── logo.png
+├── icons/
+│   ├── icon16.png
+│   ├── icon48.png
+│   └── icon128.png
+└── src/
+    ├── background.js          Service worker
+    ├── content.js             Main router and video watcher
+    ├── platforms/
+    │   ├── youtube.js
+    │   ├── tiktok.js
+    │   ├── instagram.js
+    │   ├── snapchat.js
+    │   └── twitter.js
+    └── popup/
+        ├── popup.html
+        ├── popup.css
+        └── popup.js
 ```
 
-Each file in `platforms/` is self-contained and defines three things: how to find the active video, how to scroll to the next one, and whether the platform loops videos. This modular architecture makes it easy to add a new platform or fix a broken selector without touching the rest of the codebase.
+---
 
-## Known limitations
+## ⚠️ Known Limitations
 
-- These platforms regularly update their DOM. If scrolling stops working on a given site, the CSS selector in the matching `platforms/` file likely needs updating.
-- On X, there is no true vertical shorts feed; the scroll advances through the regular timeline, which can feel less smooth than on other platforms.
-- The extension only works on the web version of each platform (not mobile apps or PWAs).
+- These platforms regularly update their DOM structure. If auto-scroll stops working on a site, the CSS selectors in the matching `src/platforms/` file may need updating.
+- On X, the feed is not a true vertical shorts format ; scrolling advances through the regular timeline, which can feel less smooth.
+- Only works on the web version of each platform (not mobile apps or PWAs).
 
-## License
+---
+
+## 🤝 Contributing
+
+⭐ Star the repo if you find it useful!
+💬 Got feedback or a bug to report? [Open an issue](https://github.com/lucas-jammes/Scrooly/issues)
+
+---
+
+## 📜 License
 
 Licensed under **GNU General Public License v3.0** - [Learn more](https://www.gnu.org/licenses/gpl-3.0.en.html)
