@@ -35,13 +35,12 @@ No store listing required, install directly from source:
 
 ## 🎯 Supported Platforms
 
-| Platform |
-|----------|
-| **YouTube Shorts** |
-| **TikTok** |
-| **Instagram Reels** |
-| **Snapchat Spotlight** |
-| **X (Twitter)** |
+![FF0033](https://placeholdit.com/10x10/FF0033/FF0033 "FF0033") YouTube Shorts  
+TikTok
+![00F2EA](https://placeholdit.com/10x10/00F2EA/00F2EA "00F2EA") TikTok  
+![E1306C](https://placeholdit.com/10x10/E1306C/E1306C "E1306C") Instagram Reels  
+![FFFC00](https://placeholdit.com/10x10/FFFC00/FFFC00 "FFFC00") Snapchat Spotlight  
+![FFFFFF](https://placeholdit.com/10x10/FFFFFF/FFFFFF "FFFFFF") X (Twitter)
 
 Each platform can be individually toggled on or off from the popup.  
 
