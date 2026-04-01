@@ -35,15 +35,15 @@ No store listing required, install directly from source:
 
 ## 🎯 Supported Platforms
 
-| Platform | Behavior |
-|----------|----------|
-| **YouTube Shorts** | Detects end of video and scrolls to the next short |
-| **TikTok** | Detects end of first loop, then scrolls |
-| **Instagram Reels** | Detects end of first loop, then scrolls |
-| **Snapchat Spotlight** | Detects end of first loop, then scrolls |
-| **X (Twitter)** | Detects end of first loop, scrolls to next post |
+| Platform |
+|----------|
+| **YouTube Shorts** |
+| **TikTok** |
+| **Instagram Reels** |
+| **Snapchat Spotlight** |
+| **X (Twitter)** |
 
-Each platform can be individually toggled on or off from the popup.
+Each platform can be individually toggled on or off from the popup.  
 
 ---
 
