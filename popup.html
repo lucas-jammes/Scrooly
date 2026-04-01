@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="8" fill="#6C5CE7"/>
+          <path d="M8 10L14 18L20 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 14L14 22L20 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="title-group">
+        <h1 class="title">AutoScroll</h1>
+        <span class="version">v1.0.0</span>
+      </div>
+    </header>
+
+    <div class="toggle-section">
+      <div class="toggle-info">
+        <span class="toggle-label">Auto-scroll</span>
+        <span class="toggle-status" id="statusText">Activé</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggleSwitch" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="platform-section">
+      <span class="section-label">Plateformes supportées</span>
+      <div class="platform-list">
+        <div class="platform-chip" data-platform="youtube">
+          <span class="chip-dot" style="background: #FF0033;"></span>
+          YT Shorts
+        </div>
+        <div class="platform-chip" data-platform="tiktok">
+          <span class="chip-dot" style="background: #00F2EA;"></span>
+          TikTok
+        </div>
+        <div class="platform-chip" data-platform="instagram">
+          <span class="chip-dot" style="background: #E1306C;"></span>
+          Reels
+        </div>
+        <div class="platform-chip" data-platform="snapchat">
+          <span class="chip-dot" style="background: #FFFC00;"></span>
+          Spotlight
+        </div>
+        <div class="platform-chip" data-platform="twitter">
+          <span class="chip-dot" style="background: #1DA1F2;"></span>
+          X
+        </div>
+      </div>
+    </div>
+
+    <div class="info-bar">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M7 6.2V10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="7" cy="4.2" r="0.7" fill="currentColor"/>
+      </svg>
+      <span>Passe à la vidéo suivante automatiquement à la fin de la lecture.</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
