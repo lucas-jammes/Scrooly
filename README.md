@@ -55,3 +55,7 @@ Each file in `platforms/` is self-contained and defines three things: how to fin
 - These platforms regularly update their DOM. If scrolling stops working on a given site, the CSS selector in the matching `platforms/` file likely needs updating.
 - On X, there is no true vertical shorts feed; the scroll advances through the regular timeline, which can feel less smooth than on other platforms.
 - The extension only works on the web version of each platform (not mobile apps or PWAs).
+
+## License
+
+Licensed under **GNU General Public License v3.0** - [Learn more](https://www.gnu.org/licenses/gpl-3.0.en.html)
