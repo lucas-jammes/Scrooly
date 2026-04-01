@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/lucas-jammes/Scrooly">
-    <img src="assets/logo.png" alt="Scrooly Logo" width="75" height="75">
+    <img src="icons/icon128.png" alt="Scrooly Logo" width="75" height="75">
   </a>
 
   <h1 align="center">Scrooly</h1>
