@@ -13,7 +13,7 @@
     "https://twitter.com/*"
   ],
   "background": {
-    "service_worker": "src/background.js"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -26,18 +26,18 @@
         "https://twitter.com/*"
       ],
       "js": [
-        "src/platforms/youtube.js",
-        "src/platforms/tiktok.js",
-        "src/platforms/instagram.js",
-        "src/platforms/snapchat.js",
-        "src/platforms/twitter.js",
-        "src/content.js"
+        "platforms/youtube.js",
+        "platforms/tiktok.js",
+        "platforms/instagram.js",
+        "platforms/snapchat.js",
+        "platforms/twitter.js",
+        "content.js"
       ],
       "run_at": "document_idle"
     }
   ],
   "action": {
-    "default_popup": "src/popup/popup.html",
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
