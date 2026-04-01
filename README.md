@@ -1,60 +1,57 @@
 # AutoScroll Videos
 
-Extension Chrome qui passe automatiquement à la vidéo suivante quand celle en cours se termine. Fonctionne sur YouTube Shorts, TikTok, Instagram Reels, Snapchat Spotlight et X.
+Chrome extension that automatically scrolls to the next video when the current one ends.  
+Works on YouTube Shorts, TikTok, Instagram Reels, Snapchat Spotlight, and X.
 
 ## Installation
 
-1. Télécharger ou cloner ce repo :
+1. Download or clone this repo:
 
 ```bash
 git clone https://github.com/lucas-jammes/auto-scroll-extension.git
 ```
 
-2. Ouvrir Chrome et aller sur `chrome://extensions/`
-3. Activer le **Mode développeur** (toggle en haut à droite)
-4. Cliquer **Charger l'extension non empaquetée**
-5. Sélectionner le dossier `auto-scroll-extension`
+2. Open Chrome and go to `chrome://extensions/`
+3. Enable **Developer mode** (toggle in the top right corner)
+4. Click **Load unpacked**
+5. Select the `auto-scroll-extension` folder
 
-L'icône apparaît dans la barre d'extensions. Un clic dessus ouvre le popup de contrôle.
+The icon appears in the extensions bar. Click it to open the control popup.
 
-## Utilisation
+## Usage
 
-L'extension fonctionne toute seule une fois activée. Quand une vidéo se termine, elle scroll vers la suivante. Le popup permet d'activer ou désactiver le comportement à tout moment, et indique sur quelle plateforme vous vous trouvez.
+The extension works on its own once enabled. When a video ends, it scrolls to the next one. The popup lets you toggle the behavior on or off at any time, and highlights which supported platform you're currently on.
 
-Comportement selon la plateforme :
+How it behaves depending on the platform:
 
-- **YouTube Shorts** : détecte la fin de la vidéo (événement natif) et passe au short suivant.
-- **TikTok / Instagram Reels / Snapchat Spotlight** : ces plateformes bouclent les vidéos automatiquement. L'extension détecte la fin du premier cycle de lecture, puis scroll.
-- **X (Twitter)** : scroll vers le post suivant quand la vidéo en cours a fait un tour complet.
+- **YouTube Shorts**: detects the native end-of-video event and moves to the next short.
+- **TikTok / Instagram Reels / Snapchat Spotlight**: these platforms loop videos by default. The extension detects the end of the first playback cycle, then scrolls.
+- **X (Twitter)**: scrolls to the next post once the current video completes a full loop.
 
-## Structure du projet
+## Project structure
 
 ```
 auto-scroll-extension/
-├── manifest.json          Manifest V3
-├── background.js          Service worker (état global, communication)
-├── content.js             Routeur principal (détection plateforme, surveillance vidéo)
-├── popup.html / .css / .js   Interface utilisateur
+├── manifest.json            Manifest V3
+├── background.js            Service worker (global state, messaging)
+├── content.js               Main router (platform detection, video monitoring)
+├── popup.html / .css / .js  User interface
 ├── platforms/
-│   ├── youtube.js         Stratégie YouTube Shorts
-│   ├── tiktok.js          Stratégie TikTok
-│   ├── instagram.js       Stratégie Instagram Reels
-│   ├── snapchat.js        Stratégie Snapchat Spotlight
-│   └── twitter.js         Stratégie X / Twitter
+│   ├── youtube.js           YouTube Shorts strategy
+│   ├── tiktok.js            TikTok strategy
+│   ├── instagram.js         Instagram Reels strategy
+│   ├── snapchat.js          Snapchat Spotlight strategy
+│   └── twitter.js           X / Twitter strategy
 └── icons/
     ├── icon16.png
     ├── icon48.png
     └── icon128.png
 ```
 
-Chaque fichier dans `platforms/` est indépendant et définit trois choses : comment trouver la vidéo active, comment passer à la suivante, et si la plateforme boucle les vidéos. Cette architecture modulaire permet d'ajouter une nouvelle plateforme ou de corriger un sélecteur cassé sans toucher au reste du code.
+Each file in `platforms/` is self-contained and defines three things: how to find the active video, how to scroll to the next one, and whether the platform loops videos. This modular architecture makes it easy to add a new platform or fix a broken selector without touching the rest of the codebase.
 
-## Limites connues
+## Known limitations
 
-- Les plateformes mettent régulièrement à jour leur DOM. Si le scroll ne fonctionne plus sur un site, le sélecteur CSS dans le fichier `platforms/` correspondant est probablement à mettre à jour.
-- Sur X, le format n'est pas un vrai feed vertical de shorts ; le scroll avance dans le feed classique, ce qui peut donner un résultat moins fluide que sur les autres plateformes.
-- L'extension ne fonctionne que sur la version web des plateformes (pas sur les apps mobiles ni les PWA).
-
-## Licence
-
-MIT
+- These platforms regularly update their DOM. If scrolling stops working on a given site, the CSS selector in the matching `platforms/` file likely needs updating.
+- On X, there is no true vertical shorts feed; the scroll advances through the regular timeline, which can feel less smooth than on other platforms.
+- The extension only works on the web version of each platform (not mobile apps or PWAs).
