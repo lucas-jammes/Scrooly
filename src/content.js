@@ -97,7 +97,9 @@
    * Lightweight : one read + one write per scroll event.
    */
   function incrementCounter() {
+    if (!chrome?.storage?.sync) return;
     chrome.storage.sync.get(["scrollCount"], (result) => {
+      if (chrome.runtime.lastError) return;
       const count = (result.scrollCount || 0) + 1;
       chrome.storage.sync.set({ scrollCount: count });
     });
@@ -126,6 +128,10 @@
     console.log(`[Scrooly] Platform detected: ${activePlatform.name}`);
 
     // Load platform states
+    if (!chrome?.storage?.sync) {
+      console.warn("[Scrooly] chrome.storage.sync unavailable.");
+      return;
+    }
     chrome.storage.sync.get(["platforms"], (result) => {
       if (chrome.runtime.lastError) return;
       platformStates = { ...platformStates, ...(result.platforms || {}) };

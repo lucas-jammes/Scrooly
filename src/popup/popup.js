@@ -32,6 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- Load state ----
 
+  if (!chrome?.storage?.sync) return;
+
   chrome.storage.sync.get(["platforms", "scrollCount"], (result) => {
     const platforms = { ...defaultPlatforms, ...(result.platforms || {}) };
 
@@ -111,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
     platformToggles.forEach((toggle) => {
       platforms[toggle.dataset.key] = toggle.checked;
     });
-    chrome.storage.sync.set({ platforms });
+    if (chrome?.storage?.sync) chrome.storage.sync.set({ platforms });
   }
 
   // ---- Broadcast to content scripts ----
