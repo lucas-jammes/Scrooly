@@ -1,0 +1,8 @@
+{
+  "extName": {
+    "message": "Scrooly"
+  },
+  "extDescription": {
+    "message": "Автоматически переключает на следующее короткое видео по окончании текущего. Поддерживает YouTube Shorts, TikTok, Instagram Reels, Snapchat Spotlight и X."
+  }
+}

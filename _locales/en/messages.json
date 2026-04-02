@@ -1,0 +1,8 @@
+{
+  "extName": {
+    "message": "Scrooly"
+  },
+  "extDescription": {
+    "message": "Automatically scroll to the next short video when the current one ends. Supports YouTube Shorts, TikTok, Instagram Reels, Snapchat Spotlight, and X."
+  }
+}
