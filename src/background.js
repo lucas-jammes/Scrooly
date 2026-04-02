@@ -6,6 +6,11 @@
  */
 
 chrome.runtime.onInstalled.addListener(() => {
+  if (!chrome?.storage?.sync) {
+    console.warn("[Scrooly] chrome.storage.sync unavailable, skipping init.");
+    return;
+  }
+
   chrome.storage.sync.get(["scrollCount"], (result) => {
     const defaults = {
       platforms: {
