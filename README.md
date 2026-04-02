@@ -57,36 +57,6 @@ No configuration needed. Open a supported site, watch a video, and Scrooly handl
 
 ---
 
-## 📁 Project Structure
-
-```
-Scrooly/
-├── manifest.json              Manifest V3
-├── LICENSE
-├── README.md
-├── assets/
-│   └── logo.png
-├── icons/
-│   ├── icon16.png
-│   ├── icon48.png
-│   └── icon128.png
-└── src/
-    ├── background.js          Service worker
-    ├── content.js             Main router and video watcher
-    ├── platforms/
-    │   ├── youtube.js
-    │   ├── tiktok.js
-    │   ├── instagram.js
-    │   ├── snapchat.js
-    │   └── twitter.js
-    └── popup/
-        ├── popup.html
-        ├── popup.css
-        └── popup.js
-```
-
----
-
 ## ⚠️ Known Limitations
 
 - These platforms regularly update their DOM structure. If auto-scroll stops working on a site, the CSS selectors in the matching `src/platforms/` file may need updating.
