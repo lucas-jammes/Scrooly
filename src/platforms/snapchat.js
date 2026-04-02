@@ -1,7 +1,8 @@
 /**
  * platforms/snapchat.js : Stratégie Snapchat Spotlight
  *
- * Snapchat Spotlight (web) utilise un feed vertical de vidéos en boucle.
+ * Snapchat Spotlight (web) affiche UNE vidéo à la fois avec navigation
+ * par boutons (haut/bas). Pas de conteneur scrollable.
  * Détection de fin via timeupdate (usesLoop: true).
  */
 
@@ -20,47 +21,47 @@
      * Récupère la vidéo Spotlight active.
      */
     getActiveVideo() {
-      const videos = document.querySelectorAll("video");
-
-      for (const video of videos) {
-        if (!video.paused && video.readyState >= 2) {
-          const rect = video.getBoundingClientRect();
-          const centerY = rect.top + rect.height / 2;
-          if (centerY > 0 && centerY < window.innerHeight) {
-            return video;
-          }
-        }
+      // Une seule vidéo affichée à la fois sur Spotlight
+      const video = document.querySelector("video");
+      if (video && !video.paused && video.readyState >= 2) {
+        return video;
       }
-
-      for (const video of videos) {
-        if (!video.paused) return video;
-      }
-
-      return null;
+      return video || null;
     },
 
     /**
-     * Passe au Spotlight suivant.
+     * Passe au Spotlight suivant via le bouton de navigation "bas".
+     * Snapchat utilise deux boutons (haut/bas) dans un conteneur de nav.
      */
     scrollToNext() {
-      // Méthode 1 : flèche bas
-      document.dispatchEvent(
-        new KeyboardEvent("keydown", {
-          key: "ArrowDown",
-          code: "ArrowDown",
-          keyCode: 40,
-          bubbles: true,
-        })
+      // Méthode 1 : cliquer sur le bouton "suivant" (2ème bouton dans le conteneur nav)
+      const navButtons = document.querySelectorAll(
+        '[class*="SpotlightNavButtons_navButtonsContainer"] button'
       );
+      const downButton = navButtons[1];
+      if (downButton && !downButton.className.includes("Disabled")) {
+        downButton.click();
+        return;
+      }
 
-      // Méthode 2 : scroll natif
-      setTimeout(() => {
-        const container = document.scrollingElement || document.documentElement;
-        container.scrollBy({
-          top: window.innerHeight,
-          behavior: "smooth",
-        });
-      }, 200);
+      // Méthode 2 : chercher n'importe quel bouton nav non-disabled
+      const allNavBtns = document.querySelectorAll(
+        '[class*="SpotlightFeedNavButtonV2_navButton"]'
+      );
+      for (const btn of allNavBtns) {
+        if (!btn.className.includes("Disabled") && !btn.className.includes("Up")) {
+          btn.click();
+          return;
+        }
+      }
+
+      // Méthode 3 (fallback) : cliquer sur le premier lien vers un autre spotlight
+      const nextLink = document.querySelector(
+        '[class*="FeedV2"] a[href*="/spotlight/"]'
+      );
+      if (nextLink) {
+        nextLink.click();
+      }
     },
   };
 })();
