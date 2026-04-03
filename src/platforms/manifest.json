@@ -2,15 +2,13 @@
   "manifest_version": 3,
   "name": "AutoScroll Videos",
   "version": "1.0.0",
-  "description": "Automatically scroll to the next short video when the current one ends. Supports YouTube Shorts, TikTok, Instagram Reels, Snapchat Spotlight, and X.",
+  "description": "Automatically scroll to the next short video when the current one ends. Supports YouTube Shorts, TikTok, Instagram Reels, and Snapchat Spotlight.",
   "permissions": ["storage", "activeTab"],
   "host_permissions": [
     "https://www.youtube.com/*",
     "https://www.tiktok.com/*",
     "https://www.instagram.com/*",
-    "https://www.snapchat.com/*",
-    "https://x.com/*",
-    "https://twitter.com/*"
+    "https://www.snapchat.com/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -21,16 +19,13 @@
         "https://www.youtube.com/*",
         "https://www.tiktok.com/*",
         "https://www.instagram.com/*",
-        "https://www.snapchat.com/*",
-        "https://x.com/*",
-        "https://twitter.com/*"
+        "https://www.snapchat.com/*"
       ],
       "js": [
         "platforms/youtube.js",
         "platforms/tiktok.js",
         "platforms/instagram.js",
         "platforms/snapchat.js",
-        "platforms/twitter.js",
         "content.js"
       ],
       "run_at": "document_idle"

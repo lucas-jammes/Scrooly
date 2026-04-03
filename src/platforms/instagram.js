@@ -1,9 +1,9 @@
 /**
  * platforms/instagram.js : Stratégie Instagram Reels
  *
- * Instagram Reels boucle les vidéos automatiquement.
- * Détection de fin de cycle via timeupdate (usesLoop: true).
- * Navigation : scroll vers le bas dans le conteneur de Reels.
+ * Instagram Reels boucle les vidéos (loop=true).
+ * On retire l'attribut loop pour que l'événement "ended" se déclenche.
+ * Navigation : scrollIntoView() sur la vidéo suivante dans le DOM.
  */
 
 (() => {
@@ -15,61 +15,59 @@
 
   window.__autoScrollPlatforms.instagram = {
     name: "Instagram Reels",
-    usesLoop: true,
+    usesLoop: false,
 
     /**
-     * Récupère la vidéo Instagram Reel active.
-     * Instagram utilise des <video> dans des conteneurs de reel.
+     * Récupère la vidéo Instagram Reel active (visible dans le viewport).
+     * Retire aussi l'attribut loop pour que "ended" se déclenche.
      */
     getActiveVideo() {
-      const videos = document.querySelectorAll("video");
+      const videos = document.querySelectorAll("main video");
 
       for (const video of videos) {
-        if (!video.paused && video.readyState >= 2) {
-          const rect = video.getBoundingClientRect();
-          const centerY = rect.top + rect.height / 2;
-          if (centerY > 0 && centerY < window.innerHeight) {
-            return video;
+        const rect = video.getBoundingClientRect();
+        if (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= window.innerHeight &&
+          rect.right <= window.innerWidth
+        ) {
+          // Retirer loop pour que l'événement "ended" se déclenche
+          if (video.hasAttribute("loop")) {
+            video.removeAttribute("loop");
           }
+          return video;
         }
-      }
-
-      // Fallback
-      for (const video of videos) {
-        if (!video.paused) return video;
       }
 
       return null;
     },
 
     /**
-     * Scroll vers le Reel suivant.
-     * Instagram Reels utilise un feed scroll-snap vertical.
+     * Scroll vers le Reel suivant via scrollIntoView().
      */
     scrollToNext() {
-      // Méthode 1 : touche flèche bas
-      document.dispatchEvent(
-        new KeyboardEvent("keydown", {
-          key: "ArrowDown",
-          code: "ArrowDown",
-          keyCode: 40,
-          bubbles: true,
-        })
-      );
+      const videos = Array.from(document.querySelectorAll("main video"));
 
-      // Méthode 2 (fallback) : scroll natif
-      setTimeout(() => {
-        const reelsContainer =
-          document.querySelector("section main > div > div") ||
-          document.scrollingElement;
+      // Trouver la vidéo actuellement visible
+      const currentIndex = videos.findIndex((video) => {
+        const rect = video.getBoundingClientRect();
+        return (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= window.innerHeight &&
+          rect.right <= window.innerWidth
+        );
+      });
 
-        if (reelsContainer) {
-          reelsContainer.scrollBy({
-            top: window.innerHeight,
-            behavior: "smooth",
-          });
-        }
-      }, 200);
+      const nextVideo = videos[currentIndex + 1];
+      if (nextVideo) {
+        nextVideo.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
+        });
+      }
     },
   };
 })();

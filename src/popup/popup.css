@@ -24,7 +24,6 @@
   --c-tiktok: #00F2EA;
   --c-instagram: #E1306C;
   --c-snapchat: #FFFC00;
-  --c-twitter: #FFFFFF;
 }
 
 body {
@@ -105,6 +104,12 @@ body {
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
+/* Disable transitions on initial load */
+body.no-transition .slider,
+body.no-transition .slider::before {
+  transition: none !important;
+}
+
 input:checked + .slider::before {
   transform: translateX(16px);
   background: #fff;
@@ -132,12 +137,6 @@ input:checked + .slider::before {
   box-shadow: 0 0 10px rgba(255, 252, 0, 0.2);
 }
 .switch-snapchat input:checked + .slider::before { background: #111; }
-
-.switch-twitter input:checked + .slider {
-  background: var(--c-twitter);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
-}
-.switch-twitter input:checked + .slider::before { background: #111; }
 
 /* ---- Platforms ---- */
 
@@ -217,8 +216,6 @@ input:checked + .slider::before {
 .platform-row[data-platform="tiktok"] .platform-pulse { color: var(--c-tiktok); }
 .platform-row[data-platform="instagram"] .platform-pulse { color: var(--c-instagram); }
 .platform-row[data-platform="snapchat"] .platform-pulse { color: var(--c-snapchat); }
-.platform-row[data-platform="twitter"] .platform-pulse { color: var(--c-twitter); }
-
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.3; transform: scale(0.6); }
