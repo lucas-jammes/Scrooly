@@ -105,6 +105,12 @@ body {
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
+/* Disable transitions on initial load */
+body.no-transition .slider,
+body.no-transition .slider::before {
+  transition: none !important;
+}
+
 input:checked + .slider::before {
   transform: translateX(16px);
   background: #fff;

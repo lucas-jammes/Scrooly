@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Scrooly",
+  "name": "__MSG_extName__",
   "version": "1.2.0",
-  "description": "Automatically scroll to the next short video when the current one ends. Supports YouTube Shorts, TikTok, Instagram Reels, Snapchat Spotlight, and X.",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "permissions": ["storage", "activeTab"],
   "host_permissions": [
     "https://www.youtube.com/*",

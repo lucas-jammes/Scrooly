@@ -8,6 +8,9 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Disable toggle transitions on initial load
+  document.body.classList.add("no-transition");
+
   const platformToggles = document.querySelectorAll(".platform-toggle");
   const scrollCountEl = document.getElementById("scrollCount");
 
@@ -44,6 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     scrollCountEl.textContent = result.scrollCount || 0;
+
+    // Re-enable transitions after initial state is set
+    requestAnimationFrame(() => {
+      document.body.classList.remove("no-transition");
+    });
   });
 
   // ---- Detect current tab platform ----

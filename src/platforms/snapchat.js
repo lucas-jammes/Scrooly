@@ -34,6 +34,12 @@
      * Snapchat utilise deux boutons (haut/bas) dans un conteneur de nav.
      */
     scrollToNext() {
+      // Bloquer le scroll de la page pendant la navigation
+      const scrollTop = document.documentElement.scrollTop;
+      const lockScroll = () => { document.documentElement.scrollTop = scrollTop; };
+      window.addEventListener("scroll", lockScroll);
+      setTimeout(() => window.removeEventListener("scroll", lockScroll), 1000);
+
       // Méthode 1 : cliquer sur le bouton "suivant" (2ème bouton dans le conteneur nav)
       const navButtons = document.querySelectorAll(
         '[class*="SpotlightNavButtons_navButtonsContainer"] button'
