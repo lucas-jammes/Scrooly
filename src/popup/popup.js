@@ -19,8 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "www.tiktok.com": "tiktok",
     "www.instagram.com": "instagram",
     "www.snapchat.com": "snapchat",
-    "x.com": "twitter",
-    "twitter.com": "twitter",
   };
 
   const defaultPlatforms = {
@@ -28,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     tiktok: true,
     instagram: true,
     snapchat: true,
-    twitter: true,
   };
 
   let currentPlatform = null;

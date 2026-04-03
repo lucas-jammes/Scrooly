@@ -9,9 +9,7 @@
     "https://www.youtube.com/*",
     "https://www.tiktok.com/*",
     "https://www.instagram.com/*",
-    "https://www.snapchat.com/*",
-    "https://x.com/*",
-    "https://twitter.com/*"
+    "https://www.snapchat.com/*"
   ],
   "background": {
     "service_worker": "src/background.js"
@@ -22,16 +20,13 @@
         "https://www.youtube.com/*",
         "https://www.tiktok.com/*",
         "https://www.instagram.com/*",
-        "https://www.snapchat.com/*",
-        "https://x.com/*",
-        "https://twitter.com/*"
+        "https://www.snapchat.com/*"
       ],
       "js": [
         "src/platforms/youtube.js",
         "src/platforms/tiktok.js",
         "src/platforms/instagram.js",
         "src/platforms/snapchat.js",
-        "src/platforms/twitter.js",
         "src/content.js"
       ],
       "run_at": "document_idle"

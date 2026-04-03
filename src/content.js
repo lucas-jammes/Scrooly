@@ -18,8 +18,6 @@
     if (hostname.includes("tiktok.com")) return "tiktok";
     if (hostname.includes("instagram.com") && path.includes("/reels")) return "instagram";
     if (hostname.includes("snapchat.com") && path.includes("/spotlight")) return "snapchat";
-    if (hostname.includes("x.com") || hostname.includes("twitter.com")) return "twitter";
-
     return null;
   }
 
@@ -28,7 +26,6 @@
     tiktok: true,
     instagram: true,
     snapchat: true,
-    twitter: true,
   };
   let activePlatformKey = null;
   let activePlatform = null;

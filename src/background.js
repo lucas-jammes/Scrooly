@@ -18,7 +18,6 @@ chrome.runtime.onInstalled.addListener(() => {
         tiktok: true,
         instagram: true,
         snapchat: true,
-        twitter: true,
       },
     };
 

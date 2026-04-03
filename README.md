@@ -38,8 +38,7 @@ No store listing required, install directly from source:
 ![FF0033](https://placeholdit.com/10x10/FF0033/FF0033 "FF0033") YouTube Shorts  
 ![00F2EA](https://placeholdit.com/10x10/00F2EA/00F2EA "00F2EA") TikTok  
 ![E1306C](https://placeholdit.com/10x10/E1306C/E1306C "E1306C") Instagram Reels  
-![FFFC00](https://placeholdit.com/10x10/FFFC00/FFFC00 "FFFC00") Snapchat Spotlight  
-![FFFFFF](https://placeholdit.com/10x10/FFFFFF/FFFFFF "FFFFFF") X (Twitter)
+![FFFC00](https://placeholdit.com/10x10/FFFC00/FFFC00 "FFFC00") Snapchat Spotlight
 
 Each platform can be individually toggled on or off from the popup.  
 
@@ -60,7 +59,6 @@ No configuration needed. Open a supported site, watch a video, and Scrooly handl
 ## ⚠️ Known Limitations
 
 - These platforms regularly update their DOM structure. If auto-scroll stops working on a site, the CSS selectors in the matching `src/platforms/` file may need updating.
-- On X, the feed is not a true vertical shorts format ; scrolling advances through the regular timeline, which can feel less smooth.
 - Only works on the web version of each platform (not mobile apps or PWAs).
 
 ---
